@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
 let users = []
 let currentPlayer = null
 let timeout
+let words = ['apple', 'windows', 'linux']
 
 function onConnection(socket) {
   socket.on('username', (username) => {
@@ -31,10 +32,12 @@ function onConnection(socket) {
 
     if (users.length === 0) {
       currentPlayer = socket
-      timeout = setTimeout(switchPlayer, 20000)
+      timeout = clearTimeout(timeout)
+      users.push(socket)
+      switchPlayer()
+    } else {
+      users.push(socket)
     }
-
-    users.push(socket)
 
     sendUsers()
   })
@@ -46,6 +49,10 @@ function onConnection(socket) {
   socket.on('disconnect', () => {
     users = users.filter((el) => el !== socket)
     sendUsers()
+
+    if (user.length === 0) {
+      timeout = clearTimeout(timeout)
+    }
   })
 }
 
@@ -66,5 +73,6 @@ function switchPlayer() {
   sendUsers()
   timeout = setTimeout(switchPlayer, 20000)
 
+  currentPlayer.emit('word', words[Math.floor(words.length * Math.random())])
   io.emit('clear')
 }

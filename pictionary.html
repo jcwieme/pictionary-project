@@ -32,6 +32,13 @@
       font-weight: bold;
       color: red;
     }
+
+    .word {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+    }
   </style>
 </head>
 
@@ -41,6 +48,8 @@
     <label>Line Weight: <input type="range" name="js-weight" id="js-weight" min="1" max="50" value="4" /></label>
     <label>Color: <input type="color" name="js-color" id="js-color" value="#000000" /></label>
   </form>
+
+  <div class="word"></div>
 
   <ul class="users" id="js-users"></ul>
 
@@ -57,10 +66,15 @@
     const inputWeight = document.getElementById('js-weight')
     const inputColor = document.getElementById('js-color')
     const usersList = document.getElementById('js-users')
+    const word = document.querySelector('.word')
 
     function setup() {
       createCanvas(500, 500)
     }
+
+    socket.on('clear', () => {
+      clear();
+    })
 
     function mouseDragged() {
       if (!isActive) return
@@ -96,10 +110,10 @@
         if (element.username === username) {
           isActive = element.active
         }
-      });
-    })
-    socket.on('clear', () => {
-      clear()
+      })
+    });
+    socket.on('word', (word) => {
+      word.innerHTML = word
     })
   </script>
 </body>
