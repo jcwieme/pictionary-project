@@ -50,7 +50,7 @@ function onConnection(socket) {
     users = users.filter((el) => el !== socket)
     sendUsers()
 
-    if (user.length === 0) {
+    if (users.length === 0) {
       timeout = clearTimeout(timeout)
     }
   })

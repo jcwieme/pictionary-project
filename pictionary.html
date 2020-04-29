@@ -66,7 +66,7 @@
     const inputWeight = document.getElementById('js-weight')
     const inputColor = document.getElementById('js-color')
     const usersList = document.getElementById('js-users')
-    const word = document.querySelector('.word')
+    const wordDiv = document.querySelector('.word')
 
     function setup() {
       createCanvas(500, 500)
@@ -113,7 +113,7 @@
       })
     });
     socket.on('word', (word) => {
-      word.innerHTML = word
+      wordDiv.innerText = 'Your word is ' + word
     })
   </script>
 </body>
