@@ -20,12 +20,29 @@ io.on('connection', (socket) => {
   onConnection(socket)
 })
 
+let users = []
+
 function onConnection(socket) {
   socket.on('username', (username) => {
     console.log('Client name: ', username)
+    socket.username = username
+    users.push(socket)
+    sendUsers()
   })
 
   socket.on('line', (data) => {
     socket.broadcast.emit('line', data)
   })
+
+  socket.on('disconnect', () => {
+    users = users.filter((el) => el !== socket)
+    sendUsers()
+  })
+}
+
+function sendUsers() {
+  io.emit(
+    'users',
+    users.map((user) => user.username) // juste garder la data des username
+  )
 }

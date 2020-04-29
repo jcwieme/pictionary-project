@@ -8,11 +8,36 @@
     canvas {
       box-shadow: 0 0 10px rgba(0, 0, 0, .3)
     }
+
+    form {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+    }
+
+    label {
+      display: block;
+    }
+
+    .users {
+      list-style: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      border: 1px solid black;
+    }
   </style>
 </head>
 
 <body>
   <h1>Hello World</h1>
+  <form>
+    <label>Line Weight: <input type="range" name="js-weight" id="js-weight" min="1" max="50" value="4" /></label>
+    <label>Color: <input type="color" name="js-color" id="js-color" value="#000000" /></label>
+  </form>
+
+  <ul class="users" id="js-users"></ul>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
@@ -23,22 +48,41 @@
 
     socket.emit('username', username)
 
+    const inputWeight = document.getElementById('js-weight')
+    const inputColor = document.getElementById('js-color')
+    const usersList = document.getElementById('js-users')
+
     function setup() {
       createCanvas(500, 500)
     }
 
     function mouseDragged() {
+      strokeWeight(inputWeight.value)
+      stroke(inputColor.value)
       line(mouseX, mouseY, pmouseX, pmouseY)
       socket.emit('line', {
         mouseX,
         mouseY,
         pmouseX,
-        pmouseY
+        pmouseY,
+        weight: inputWeight.value,
+        color: inputColor.value
       })
     }
 
     socket.on('line', (data) => {
+      strokeWeight(data.weight)
+      stroke(data.color)
       line(data.mouseX, data.mouseY, data.pmouseX, data.pmouseY)
+    })
+
+    socket.on('users', (data) => {
+      usersList.innerHTML = ''
+      data.forEach(element => {
+        const li = document.createElement('li')
+        li.innerHTML = element
+        usersList.appendChild(li)
+      });
     })
   </script>
 </body>
