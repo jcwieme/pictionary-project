@@ -1,0 +1,24 @@
+{
+  "name": "pictionary-project",
+  "version": "0.0.1",
+  "description": "Pictionary project using websocket",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcwieme/pictionary-project.git"
+  },
+  "author": "Jean-Christophe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jcwieme/pictionary-project/issues"
+  },
+  "homepage": "https://github.com/jcwieme/pictionary-project#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
