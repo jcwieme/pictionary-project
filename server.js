@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
 let users = []
 let currentPlayer = null
 let timeout
-let words = ['apple', 'windows', 'linux']
+let words = ['apple', 'windows', 'linux', 'car', 'bike']
 
 function onConnection(socket) {
   socket.on('username', (username) => {
