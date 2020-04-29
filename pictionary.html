@@ -27,6 +27,11 @@
       padding: 10px;
       border: 1px solid black;
     }
+
+    .bold {
+      font-weight: bold;
+      color: red;
+    }
   </style>
 </head>
 
@@ -43,6 +48,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
   <script>
     let socket = io()
+    let isActive = false
 
     const username = prompt('Tell me your name')
 
@@ -57,6 +63,7 @@
     }
 
     function mouseDragged() {
+      if (!isActive) return
       strokeWeight(inputWeight.value)
       stroke(inputColor.value)
       line(mouseX, mouseY, pmouseX, pmouseY)
@@ -80,9 +87,19 @@
       usersList.innerHTML = ''
       data.forEach(element => {
         const li = document.createElement('li')
-        li.innerHTML = element
+        li.innerHTML = element.username
+        if (element.active) {
+          li.classList.add('bold')
+        }
         usersList.appendChild(li)
+
+        if (element.username === username) {
+          isActive = element.active
+        }
       });
+    })
+    socket.on('clear', () => {
+      clear()
     })
   </script>
 </body>

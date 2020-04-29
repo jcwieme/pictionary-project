@@ -21,12 +21,21 @@ io.on('connection', (socket) => {
 })
 
 let users = []
+let currentPlayer = null
+let timeout
 
 function onConnection(socket) {
   socket.on('username', (username) => {
     console.log('Client name: ', username)
     socket.username = username
+
+    if (users.length === 0) {
+      currentPlayer = socket
+      timeout = setTimeout(switchPlayer, 20000)
+    }
+
     users.push(socket)
+
     sendUsers()
   })
 
@@ -43,6 +52,19 @@ function onConnection(socket) {
 function sendUsers() {
   io.emit(
     'users',
-    users.map((user) => user.username) // juste garder la data des username
+    users.map((user) => {
+      return { username: user.username, active: user === currentPlayer }
+    })
   )
+}
+
+function switchPlayer() {
+  if (users.length === 0) return
+
+  currentPlayer = users[(users.indexOf(currentPlayer) + 1) % users.length]
+
+  sendUsers()
+  timeout = setTimeout(switchPlayer, 20000)
+
+  io.emit('clear')
 }
